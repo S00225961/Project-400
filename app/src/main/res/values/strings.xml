@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Project400</string>
+    <string name="camera_request_permission">This app needs camera permission.</string>
 </resources>

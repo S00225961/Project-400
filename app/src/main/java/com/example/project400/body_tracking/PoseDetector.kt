@@ -1,6 +1,7 @@
-package com.example.project400
+package com.example.project400.body_tracking
 
 import android.graphics.Bitmap
+import com.example.project400.body_tracking.Person
 
 interface PoseDetector : AutoCloseable {
     fun estimatePoses(bitmap: Bitmap): List<Person>

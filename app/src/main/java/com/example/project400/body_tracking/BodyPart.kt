@@ -1,4 +1,4 @@
-package com.example.project400
+package com.example.project400.body_tracking
 
 enum class BodyPart(val position: Int) {
     NOSE(0),

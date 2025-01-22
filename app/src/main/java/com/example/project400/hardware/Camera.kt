@@ -1,4 +1,4 @@
-package com.example.project400
+package com.example.project400.hardware
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,6 +16,11 @@ import android.os.HandlerThread
 import android.util.Log
 import android.view.Surface
 import android.view.SurfaceView
+import com.example.project400.pose_classification.PoseClassifier
+import com.example.project400.body_tracking.PoseDetector
+import com.example.project400.body_tracking.Person
+import com.example.project400.visuals.VisualizationUtils
+import com.example.project400.visuals.YuvToRgbConverter
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Timer
 import java.util.TimerTask

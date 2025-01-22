@@ -1,9 +1,11 @@
-package com.example.project400
+package com.example.project400.visuals
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import com.example.project400.body_tracking.BodyPart
+import com.example.project400.body_tracking.Person
 import kotlin.math.max
 
 object VisualizationUtils {

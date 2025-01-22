@@ -12,6 +12,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import com.example.project400.body_tracking.MoveNet
+import com.example.project400.hardware.Camera
+import com.example.project400.hardware.Device
+import com.example.project400.pose_classification.PoseClassifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

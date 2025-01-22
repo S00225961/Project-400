@@ -1,4 +1,4 @@
-package com.example.project400
+package com.example.project400.visuals
 
 import android.content.Context
 import android.graphics.Bitmap

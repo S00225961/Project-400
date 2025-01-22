@@ -1,6 +1,7 @@
-package com.example.project400
+package com.example.project400.pose_classification
 
 import android.content.Context
+import com.example.project400.body_tracking.Person
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
 

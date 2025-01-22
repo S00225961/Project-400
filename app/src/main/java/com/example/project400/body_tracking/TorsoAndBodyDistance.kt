@@ -1,4 +1,4 @@
-package com.example.project400
+package com.example.project400.body_tracking
 
 data class TorsoAndBodyDistance(
     val maxTorsoYDistance: Float,

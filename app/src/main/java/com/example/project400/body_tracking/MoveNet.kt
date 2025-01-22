@@ -1,4 +1,4 @@
-package com.example.project400
+package com.example.project400.body_tracking
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,6 +7,7 @@ import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
 import android.os.SystemClock
+import com.example.project400.hardware.Device
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.gpu.GpuDelegate
@@ -18,9 +19,7 @@ import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import kotlin.math.max
 import kotlin.math.min
-import com.example.project400.Device
 
-import android.graphics.*
 import kotlin.math.abs
 
 class MoveNet(private val interpreter: Interpreter, private var gpuDelegate: GpuDelegate?) :

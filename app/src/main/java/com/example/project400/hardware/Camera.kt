@@ -86,7 +86,7 @@ class Camera (private val surfaceView: SurfaceView, private val listener: Camera
                             Bitmap.Config.ARGB_8888
                         )
                 }
-                yuvConverter.yuvToRgb(image, imageBitmap)
+                imageBitmap = yuvConverter.yuvToRgb(image)
                 // Create rotated version for portrait display
                 val rotateMatrix = Matrix()
                 rotateMatrix.postRotate(90.0f)

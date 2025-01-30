@@ -16,6 +16,8 @@ import android.os.HandlerThread
 import android.util.Log
 import android.view.Surface
 import android.view.SurfaceView
+import android.widget.TextView
+import com.example.project400.MainActivity
 import com.example.project400.pose_classification.PoseClassifier
 import com.example.project400.body_tracking.PoseDetector
 import com.example.project400.body_tracking.Person
@@ -27,27 +29,19 @@ import java.util.TimerTask
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class Camera (private val surfaceView: SurfaceView, private val listener: CameraSourceListener? = null) {
+class Camera (private val surfaceView: SurfaceView, private val mainActivity: MainActivity) {
     companion object {
         private const val PREVIEW_WIDTH = 640
         private const val PREVIEW_HEIGHT = 480
 
         /** Threshold for confidence score. */
         private const val MIN_CONFIDENCE = .2f
-        private const val TAG = "Camera Source"
     }
-
     private val lock = Any()
     private var detector: PoseDetector? = null
-    private var classifier: PoseClassifier? = null
     private var isTrackerEnabled = false
     private var yuvConverter: YuvToRgbConverter = YuvToRgbConverter(surfaceView.context)
     private lateinit var imageBitmap: Bitmap
-
-    /** Frame count that have been processed so far in an one second interval to calculate FPS. */
-    private var fpsTimer: Timer? = null
-    private var frameProcessedInOneSecondInterval = 0
-    private var framesPerSecond = 0
 
     /** Detects, characterizes, and connects to a CameraDevice (used for all camera operations) */
     private val cameraManager: CameraManager by lazy {
@@ -166,77 +160,20 @@ class Camera (private val surfaceView: SurfaceView, private val listener: Camera
         }
     }
 
-    fun setClassifier(classifier: PoseClassifier?) {
-        synchronized(lock) {
-            if (this.classifier != null) {
-                this.classifier?.close()
-                this.classifier = null
-            }
-            this.classifier = classifier
-        }
-    }
-
-    fun resume() {
-        imageReaderThread = HandlerThread("imageReaderThread").apply { start() }
-        imageReaderHandler = Handler(imageReaderThread!!.looper)
-        fpsTimer = Timer()
-        fpsTimer?.scheduleAtFixedRate(
-            object : TimerTask() {
-                override fun run() {
-                    framesPerSecond = frameProcessedInOneSecondInterval
-                    frameProcessedInOneSecondInterval = 0
-                }
-            },
-            0,
-            1000
-        )
-    }
-
-    fun close() {
-        session?.close()
-        session = null
-        camera?.close()
-        camera = null
-        imageReader?.close()
-        imageReader = null
-        stopImageReaderThread()
-        detector?.close()
-        detector = null
-        classifier?.close()
-        classifier = null
-        fpsTimer?.cancel()
-        fpsTimer = null
-        frameProcessedInOneSecondInterval = 0
-        framesPerSecond = 0
-    }
-
     // process image
     private fun processImage(bitmap: Bitmap) {
         val persons = mutableListOf<Person>()
-        var classificationResult: List<Pair<String, Float>>? = null
 
         synchronized(lock) {
             detector?.estimatePoses(bitmap)?.let {
                 persons.addAll(it)
-
-                // if the model only returns one item, allow running the Pose classifier.
                 if (persons.isNotEmpty()) {
-                    classifier?.run {
-                        classificationResult = classify(persons[0])
-                    }
+                    mainActivity.displayPoseClassification(persons[0])
                 }
             }
         }
-        frameProcessedInOneSecondInterval++
-        if (frameProcessedInOneSecondInterval == 1) {
-            // send fps to view
-            listener?.onFPSListener(framesPerSecond)
-        }
 
-        // if the model returns only one item, show that item's score.
-        if (persons.isNotEmpty()) {
-            listener?.onDetectedInfo(persons[0].score, classificationResult)
-        }
+
         visualize(persons, bitmap)
     }
 
@@ -277,23 +214,6 @@ class Camera (private val surfaceView: SurfaceView, private val listener: Camera
             )
             surfaceView.holder.unlockCanvasAndPost(canvas)
         }
-    }
-
-    private fun stopImageReaderThread() {
-        imageReaderThread?.quitSafely()
-        try {
-            imageReaderThread?.join()
-            imageReaderThread = null
-            imageReaderHandler = null
-        } catch (e: InterruptedException) {
-            Log.d(TAG, e.message.toString())
-        }
-    }
-
-    interface CameraSourceListener {
-        fun onFPSListener(fps: Int)
-
-        fun onDetectedInfo(personScore: Float?, poseLabels: List<Pair<String, Float>>?)
     }
 
 }

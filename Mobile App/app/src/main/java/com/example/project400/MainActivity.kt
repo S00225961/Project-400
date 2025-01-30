@@ -7,7 +7,9 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Process
+import android.util.Log
 import android.view.SurfaceView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -18,10 +20,13 @@ import com.example.project400.hardware.Device
 import com.example.project400.pose_classification.PoseClassifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.project400.body_tracking.Person
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var surfaceView: SurfaceView
+    private lateinit var poseClassifierText: TextView
+    private lateinit var classifier: PoseClassifier
     private var device = Device.CPU
     private var isClassifyPose = false
     private var camera: Camera? = null
@@ -76,6 +81,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         surfaceView = findViewById(R.id.surfaceView)
+        poseClassifierText = findViewById(R.id.poseClassifierText)
+
+        // Instantiate the classifier
+        classifier = PoseClassifier(this)
+
         if (!isCameraPermissionGranted()) {
             requestPermission()
         }
@@ -118,23 +128,8 @@ class MainActivity : AppCompatActivity() {
     private fun openCamera() {
         if (isCameraPermissionGranted()) {
             if (camera == null) {
-                camera =
-                    Camera(surfaceView, object : Camera.CameraSourceListener {
-                        override fun onFPSListener(fps: Int) {
-
-                        }
-
-                        override fun onDetectedInfo(
-                            personScore: Float?,
-                            poseLabels: List<Pair<String, Float>>?
-                        ) {
-
-                        }
-
-                    }).apply {
-                        prepareCamera()
-                    }
-                isPoseClassifier()
+                camera = Camera(surfaceView, this).apply { prepareCamera() }
+                //isPoseClassifier()
                 lifecycleScope.launch(Dispatchers.Main) {
                     camera?.initCamera()
                 }
@@ -143,9 +138,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // pose classifier
-    private fun isPoseClassifier() {
-        camera?.setClassifier(if (isClassifyPose) PoseClassifier.create(this) else null)
+    fun displayPoseClassification(person: Person){
+        // Classify
+        val classificationResult = classifier.classify(person)
+        val sortedResults = classificationResult.sortedByDescending { it.second }
+        var mostAccuratePose = sortedResults.firstOrNull()
+        val output = getString(R.string.pose_classification_text) + " $mostAccuratePose"
+        poseClassifierText.text = output
     }
 
     // create pose estimator
@@ -153,16 +152,9 @@ class MainActivity : AppCompatActivity() {
         // Create MoveNet Lightning (SinglePose)
         val poseDetector = MoveNet.create(this, device)
 
-        // Configure display options for SinglePose
-//        showPoseClassifier(true)
-//        showDetectionScore(true)
-//        showTracker(false)
-
         // Set the pose detector on the camera source
         poseDetector?.let { detector ->
             camera?.setDetector(detector)
         }
     }
-
-
 }

@@ -3,33 +3,55 @@ package com.example.project400.pose_classification
 import android.content.Context
 import com.example.project400.body_tracking.Person
 import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.support.common.FileUtil
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
-class PoseClassifier (private val interpreter: Interpreter, private val labels: List<String>) {
-    private val input = interpreter.getInputTensor(0).shape()
-    private val output = interpreter.getOutputTensor(0).shape()
+class PoseClassifier (context: Context) {
 
-    companion object {
-        private const val MODEL_FILENAME = "classifier.tflite"
-        private const val LABELS_FILENAME = "labels.txt"
-        private const val CPU_NUM_THREADS = 4
+    private val tfliteInterpreter: Interpreter
+    private val poseLabels: List<String>
+    
+    init {
+        // Load the TFLite model
+        tfliteInterpreter = loadModel(context, "pose_classifier.tflite")
 
-        fun create(context: Context): PoseClassifier {
-            val options = Interpreter.Options().apply {
-                setNumThreads(CPU_NUM_THREADS)
-            }
-            return PoseClassifier(
-                Interpreter(
-                    FileUtil.loadMappedFile(
-                        context, MODEL_FILENAME
-                    ), options
-                ),
-                FileUtil.loadLabels(context, LABELS_FILENAME)
-            )
-        }
+        // Load pose labels
+        poseLabels = loadPoseLabels(context, "pose_labels.txt")
     }
 
+    // Load the TFLite model from the assets folder
+    private fun loadModel(context: Context, modelFileName: String): Interpreter {
+        val modelFile = context.assets.open(modelFileName).use { inputStream ->
+            val modelByteArray = inputStream.readBytes()
+            ByteBuffer.allocateDirect(modelByteArray.size).apply {
+                order(ByteOrder.nativeOrder())
+                put(modelByteArray)
+            }
+        }
+        return Interpreter(modelFile)
+    }
+
+    // Load pose labels from a text file in the assets folder
+    private fun loadPoseLabels(context: Context, labelsFileName: String): List<String> {
+        val labels = mutableListOf<String>()
+        context.assets.open(labelsFileName).use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    labels.add(line!!)
+                }
+            }
+        }
+
+        return labels
+    }
+
+    // Classify the pose based on the input data
     fun classify(person: Person?): List<Pair<String, Float>> {
+        val input = tfliteInterpreter.getInputTensor(0).shape()
+        val output = tfliteInterpreter.getOutputTensor(0).shape()
         // Preprocess the pose estimation result to a flat array
         val inputVector = FloatArray(input[1])
         person?.keyPoints?.forEachIndexed { index, keyPoint ->
@@ -40,15 +62,17 @@ class PoseClassifier (private val interpreter: Interpreter, private val labels: 
 
         // Postprocess the model output to human readable class names
         val outputTensor = FloatArray(output[1])
-        interpreter.run(arrayOf(inputVector), arrayOf(outputTensor))
-        val output = mutableListOf<Pair<String, Float>>()
+        tfliteInterpreter.run(arrayOf(inputVector), arrayOf(outputTensor))
+        val classificationResult = mutableListOf<Pair<String, Float>>()
         outputTensor.forEachIndexed { index, score ->
-            output.add(Pair(labels[index], score))
+            classificationResult.add(Pair(poseLabels[index], score))
         }
-        return output
+        return classificationResult
     }
 
     fun close() {
-        interpreter.close()
+        tfliteInterpreter.close()
     }
+
+
 }

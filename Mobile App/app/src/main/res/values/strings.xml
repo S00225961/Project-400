@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Project400</string>
+    <string name="app_name">NeuroPi Fitness</string>
     <string name="camera_request_permission">This app needs camera permission.</string>
     <string name="pose_classification_text">Exercise being performed: </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

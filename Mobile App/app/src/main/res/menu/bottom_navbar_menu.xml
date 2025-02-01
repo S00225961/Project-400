@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/profile"
+        android:title="Profile" />
+
+    <item
+        android:id="@+id/historyFragment"
+        android:icon="@drawable/history"
+        android:title="History" />
+
+    <item
+        android:id="@+id/workoutFragment"
+        android:icon="@drawable/workout"
+        android:title="Workout" />
+
+    <item
+        android:id="@+id/exercisesFragment"
+        android:icon="@drawable/exercises"
+        android:title="Exercises" />
+</menu>

@@ -13,23 +13,19 @@ import android.hardware.camera2.CameraManager
 import android.media.ImageReader
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.Log
 import android.view.Surface
 import android.view.SurfaceView
-import android.widget.TextView
 import com.example.project400.MainActivity
-import com.example.project400.pose_classification.PoseClassifier
 import com.example.project400.body_tracking.PoseDetector
 import com.example.project400.body_tracking.Person
+import com.example.project400.fragment_workout
 import com.example.project400.visuals.VisualizationUtils
 import com.example.project400.visuals.YuvToRgbConverter
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.util.Timer
-import java.util.TimerTask
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class Camera (private val surfaceView: SurfaceView, private val mainActivity: MainActivity) {
+class Camera(private val surfaceView: SurfaceView, private val fragmentWorkout: fragment_workout) {
     companion object {
         private const val PREVIEW_WIDTH = 640
         private const val PREVIEW_HEIGHT = 480
@@ -168,7 +164,7 @@ class Camera (private val surfaceView: SurfaceView, private val mainActivity: Ma
             detector?.estimatePoses(bitmap)?.let {
                 persons.addAll(it)
                 if (persons.isNotEmpty()) {
-                    mainActivity.displayPoseClassification(persons[0])
+                    fragmentWorkout.displayPoseClassification(persons[0])
                 }
             }
         }

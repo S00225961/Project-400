@@ -39,6 +39,10 @@ android {
 }
 
 dependencies {
+    //ui
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.2")
     //tensorflow
     implementation("com.google.ai.edge.litert:litert-gpu:1.0.1")
     implementation("com.google.ai.edge.litert:litert:1.0.1")

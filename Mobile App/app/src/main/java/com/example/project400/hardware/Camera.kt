@@ -18,10 +18,13 @@ import android.view.SurfaceView
 import com.example.project400.MainActivity
 import com.example.project400.body_tracking.PoseDetector
 import com.example.project400.body_tracking.Person
+import com.example.project400.classifier
 import com.example.project400.fragment_workout
 import com.example.project400.visuals.VisualizationUtils
 import com.example.project400.visuals.YuvToRgbConverter
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.util.Timer
+import java.util.TimerTask
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -210,6 +213,23 @@ class Camera(private val surfaceView: SurfaceView, private val fragmentWorkout: 
             )
             surfaceView.holder.unlockCanvasAndPost(canvas)
         }
+    }
+
+    fun resume() {
+        imageReaderThread = HandlerThread("imageReaderThread").apply { start() }
+        imageReaderHandler = Handler(imageReaderThread!!.looper)
+    }
+
+    fun close() {
+        session?.close()
+        session = null
+        camera?.close()
+        camera = null
+        imageReader?.close()
+        imageReader = null
+        detector?.close()
+        detector = null
+        classifier?.close()
     }
 
 }

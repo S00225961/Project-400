@@ -24,13 +24,9 @@ import com.example.project400.pose_classification.PoseClassifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 private lateinit var surfaceView: SurfaceView
 private lateinit var poseClassifierText: TextView
-private lateinit var classifier: PoseClassifier
+lateinit var classifier: PoseClassifier
 private var device = Device.CPU
 private var camera: Camera? = null
 
@@ -111,6 +107,22 @@ class fragment_workout : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        openCamera()
+    }
+
+    override fun onResume() {
+        camera?.resume()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        camera?.close()
+        camera = null
+        super.onPause()
+    }
+
     // check if permission is granted or not.
     private fun isCameraPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
@@ -119,28 +131,22 @@ class fragment_workout : Fragment() {
     // request camera permission
     private fun requestPermission() {
         // Check if the camera permission is granted
-        val permissionStatus = context?.let {
-            ContextCompat.checkSelfPermission(
-                it,
-                Manifest.permission.CAMERA
-            )
-        }
+        if (!isAdded) return
 
-        // If permission is granted, open the camera
-        if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
+        if (isCameraPermissionGranted()) {
             openCamera()
         } else {
-            // If not granted, request permission
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
     // open camera
     private fun openCamera() {
+        if (!isAdded) return
+
         if (isCameraPermissionGranted()) {
             if (camera == null) {
                 camera = Camera(surfaceView, this).apply { prepareCamera() }
-                //isPoseClassifier()
                 lifecycleScope.launch(Dispatchers.Main) {
                     camera?.initCamera()
                 }
@@ -151,6 +157,7 @@ class fragment_workout : Fragment() {
 
     fun displayPoseClassification(person: Person){
         // Classify
+        if(!isAdded) return
         val classificationResult = classifier.classify(person)
         val sortedResults = classificationResult.sortedByDescending { it.second }
         var mostAccuratePose = sortedResults.firstOrNull()
@@ -160,6 +167,7 @@ class fragment_workout : Fragment() {
 
     // create pose estimator
     private fun createPoseEstimator() {
+        if(!isAdded) return
         // Create MoveNet Lightning (SinglePose)
         val poseDetector = context?.let { MoveNet.create(it, device) }
 

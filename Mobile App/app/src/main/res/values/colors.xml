@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="background">#5C7285</color>
+    <color name="navbar">#818C78</color>
+    <color name="gray">#565265</color>
+    <color name="alter_gray">#5E686D</color>
+    <color name="lightGreen">#A7B49E</color>
+    <color name="cream">#E2E0C8</color>
 </resources>

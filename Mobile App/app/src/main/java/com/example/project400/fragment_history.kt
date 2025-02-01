@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +22,9 @@ class fragment_history : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var workoutRecyclerView: RecyclerView
+    private lateinit var workoutAdapter: WorkoutAdapter
+    private lateinit var workoutList: List<Workout>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +40,23 @@ class fragment_history : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_history, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        workoutRecyclerView = view.findViewById(R.id.workoutRecyclerView)
+
+        // Example data, you can replace this with real data
+        workoutList = listOf(
+            Workout("70kg", "45 mins", 3, listOf("Squats", "Deadlifts")),
+            Workout("80kg", "50 mins", 2, listOf("Bench Press", "Pull-ups")),
+            Workout("60kg", "30 mins", 4, listOf("Push-ups", "Lunges"))
+        )
+
+        workoutAdapter = WorkoutAdapter(workoutList)
+        workoutRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        workoutRecyclerView.adapter = workoutAdapter
     }
 
     companion object {

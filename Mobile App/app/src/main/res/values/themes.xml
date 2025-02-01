@@ -3,6 +3,12 @@
     <style name="Base.Theme.Project400" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#6200EE</item>
+        <item name="colorPrimaryVariant">#3700B3</item>
+        <item name="colorSecondary">#03DAC5</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:statusBarColor">#818C78</item>
+
     </style>
 
     <style name="Theme.Project400" parent="Base.Theme.Project400" />

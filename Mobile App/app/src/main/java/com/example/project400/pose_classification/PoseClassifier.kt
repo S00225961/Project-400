@@ -1,7 +1,7 @@
 package com.example.project400.pose_classification
 
 import android.content.Context
-import com.example.project400.body_tracking.Person
+import com.example.project400.data.Person
 import org.tensorflow.lite.Interpreter
 import java.io.BufferedReader
 import java.io.InputStreamReader

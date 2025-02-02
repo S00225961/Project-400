@@ -15,16 +15,13 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.Surface
 import android.view.SurfaceView
-import com.example.project400.MainActivity
 import com.example.project400.body_tracking.PoseDetector
-import com.example.project400.body_tracking.Person
-import com.example.project400.classifier
-import com.example.project400.fragment_workout
+import com.example.project400.data.Person
+import com.example.project400.fragments.classifier
+import com.example.project400.fragments.fragment_workout
 import com.example.project400.visuals.VisualizationUtils
 import com.example.project400.visuals.YuvToRgbConverter
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.util.Timer
-import java.util.TimerTask
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 

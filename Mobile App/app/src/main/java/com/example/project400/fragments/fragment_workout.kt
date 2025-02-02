@@ -1,11 +1,10 @@
-package com.example.project400
+package com.example.project400.fragments
 
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Process
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.SurfaceView
@@ -16,8 +15,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import com.example.project400.R
 import com.example.project400.body_tracking.MoveNet
-import com.example.project400.body_tracking.Person
+import com.example.project400.data.Person
 import com.example.project400.hardware.Camera
 import com.example.project400.hardware.Device
 import com.example.project400.pose_classification.PoseClassifier
@@ -30,11 +30,6 @@ lateinit var classifier: PoseClassifier
 private var device = Device.CPU
 private var camera: Camera? = null
 
-/**
- * A simple [Fragment] subclass.
- * Use the [fragment_workout.newInstance] factory method to
- * create an instance of this fragment.
- */
 class fragment_workout : Fragment() {
 
     class ErrorDialog : DialogFragment() {

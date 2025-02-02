@@ -7,6 +7,10 @@ import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
 import android.os.SystemClock
+import com.example.project400.data.BodyPart
+import com.example.project400.data.KeyPoint
+import com.example.project400.data.Person
+import com.example.project400.data.TorsoAndBodyDistance
 import com.example.project400.hardware.Device
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter

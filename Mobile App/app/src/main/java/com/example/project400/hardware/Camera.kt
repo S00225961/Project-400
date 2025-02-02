@@ -176,6 +176,7 @@ class Camera(private val surfaceView: SurfaceView, private val fragmentWorkout: 
     private fun visualize(persons: List<Person>, bitmap: Bitmap) {
 
         val outputBitmap = VisualizationUtils.drawBodyKeypoints(
+            fragmentWorkout,
             bitmap,
             persons.filter { it.score > MIN_CONFIDENCE }, isTrackerEnabled
         )

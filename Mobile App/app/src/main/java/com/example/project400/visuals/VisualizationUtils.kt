@@ -1,16 +1,21 @@
 package com.example.project400.visuals
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import androidx.core.content.ContextCompat
+import com.example.project400.R
 import com.example.project400.data.BodyPart
 import com.example.project400.data.Person
+import com.example.project400.fragments.fragment_workout
 import kotlin.math.max
 
 object VisualizationUtils {
     /** Radius of circle used to draw keypoints.  */
-    private const val CIRCLE_RADIUS = 6f
+    private const val CIRCLE_RADIUS = 4f
 
     /** Width of line used to connected two keypoints.  */
     private const val LINE_WIDTH = 4f
@@ -44,19 +49,20 @@ object VisualizationUtils {
     )
 
     // Draw line and point indicate body pose
+    @SuppressLint("UseRequireInsteadOfGet")
     fun drawBodyKeypoints(
+        fragmentWorkout: fragment_workout,
         input: Bitmap,
         persons: List<Person>,
         isTrackerEnabled: Boolean = false
     ): Bitmap {
         val paintCircle = Paint().apply {
             strokeWidth = CIRCLE_RADIUS
-            color = Color.RED
-            style = Paint.Style.FILL
+            color = fragmentWorkout.context?.let { ContextCompat.getColor(it, R.color.grass_green) }!!
         }
         val paintLine = Paint().apply {
             strokeWidth = LINE_WIDTH
-            color = Color.GREEN
+            color = fragmentWorkout.context?.let { ContextCompat.getColor(it, R.color.red) }!!
             style = Paint.Style.STROKE
         }
 

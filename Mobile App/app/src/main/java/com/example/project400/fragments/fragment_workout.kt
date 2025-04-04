@@ -1,16 +1,20 @@
 package com.example.project400.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -23,14 +27,18 @@ import com.example.project400.hardware.Device
 import com.example.project400.pose_classification.PoseClassifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.project400.raspberrypi.Bluetooth
 
 private lateinit var surfaceView: SurfaceView
 private lateinit var poseClassifierText: TextView
+private lateinit var piData: TextView
+private lateinit var bluetoothStatus: TextView
+private lateinit var bluetooth: Bluetooth
 lateinit var classifier: PoseClassifier
 private var device = Device.CPU
 private var camera: Camera? = null
 
-class fragment_workout : Fragment() {
+class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
 
     class ErrorDialog : DialogFragment() {
 
@@ -90,6 +98,12 @@ class fragment_workout : Fragment() {
 
         surfaceView = view.findViewById(R.id.surfaceView)
         poseClassifierText = view.findViewById(R.id.poseClassifierText)
+        piData = view.findViewById(R.id.raspberryPiData)
+        bluetoothStatus = view.findViewById(R.id.bluetoothStatus)
+
+        bluetooth = Bluetooth(requireContext(), this)
+        bluetooth.connectToPairedDevice()
+        handler.postDelayed(readDataRunnable, 4000)
 
         // Instantiate the classifier
         classifier = context?.let { PoseClassifier(it) }!!
@@ -99,6 +113,15 @@ class fragment_workout : Fragment() {
         }
         else {
             openCamera()
+        }
+
+    }
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val readDataRunnable = object : Runnable {
+        override fun run() {
+            bluetooth.readAllSensorData()
+            handler.postDelayed(this, 3000) // Every 3 sec
         }
     }
 
@@ -171,4 +194,15 @@ class fragment_workout : Fragment() {
             camera?.setDetector(detector)
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        handler.removeCallbacks(readDataRunnable) // Stop reading when fragment is destroyed
+        bluetooth.disconnect()
+    }
+
+    override fun onSensorDataUpdated(temp: String, hr: String, spo2: String, humidity: String) {
+        piData.text = "Body Temp: $temp°C, Heart Rate: $hr bpm, SpO2: $spo2%, Humidity: $humidity%"
+    }
+
 }

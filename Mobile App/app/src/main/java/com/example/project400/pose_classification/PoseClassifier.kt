@@ -1,18 +1,22 @@
 package com.example.project400.pose_classification
 
 import android.content.Context
+import android.graphics.PointF
+import com.example.project400.data.BodyPart
+import com.example.project400.data.KeyPoint
 import com.example.project400.data.Person
 import org.tensorflow.lite.Interpreter
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import kotlin.math.*
 
 class PoseClassifier (context: Context) {
 
     private val tfliteInterpreter: Interpreter
     private val poseLabels: List<String>
-    
+
     init {
         // Load the TFLite model
         tfliteInterpreter = loadModel(context, "pose_classifier.tflite")
@@ -69,6 +73,60 @@ class PoseClassifier (context: Context) {
         }
         return classificationResult
     }
+
+    //Functions for feedback
+    fun calculateAngle(a: PointF, b: PointF, c: PointF): Float {
+        val baX = a.x - b.x
+        val baY = a.y - b.y
+        val bcX = c.x - b.x
+        val bcY = c.y - b.y
+
+        val dotProduct = baX * bcX + baY * bcY
+        val magnitudeBA = sqrt(baX.pow(2) + baY.pow(2))
+        val magnitudeBC = sqrt(bcX.pow(2) + bcY.pow(2))
+
+        val cosine = dotProduct / (magnitudeBA * magnitudeBC + 1e-6f)
+        val angle = acos(cosine.coerceIn(-1f, 1f))
+        return Math.toDegrees(angle.toDouble()).toFloat()
+    }
+
+    fun extractAngles(keypoints: List<KeyPoint>): Map<String, Float> {
+        val kp = keypoints.associateBy { it.bodyPart }
+
+        return mapOf(
+            "knee_left" to calculateAngle(
+                kp[BodyPart.LEFT_HIP]!!.coordinate,
+                kp[BodyPart.LEFT_KNEE]!!.coordinate,
+                kp[BodyPart.LEFT_ANKLE]!!.coordinate
+            ),
+            "knee_right" to calculateAngle(
+                kp[BodyPart.RIGHT_HIP]!!.coordinate,
+                kp[BodyPart.RIGHT_KNEE]!!.coordinate,
+                kp[BodyPart.RIGHT_ANKLE]!!.coordinate
+            ),
+            "hip_left" to calculateAngle(
+                kp[BodyPart.LEFT_SHOULDER]!!.coordinate,
+                kp[BodyPart.LEFT_HIP]!!.coordinate,
+                kp[BodyPart.LEFT_KNEE]!!.coordinate
+            ),
+            "hip_right" to calculateAngle(
+                kp[BodyPart.RIGHT_SHOULDER]!!.coordinate,
+                kp[BodyPart.RIGHT_HIP]!!.coordinate,
+                kp[BodyPart.RIGHT_KNEE]!!.coordinate
+            ),
+            "elbow_left" to calculateAngle(
+                kp[BodyPart.LEFT_SHOULDER]!!.coordinate,
+                kp[BodyPart.LEFT_ELBOW]!!.coordinate,
+                kp[BodyPart.LEFT_WRIST]!!.coordinate
+            ),
+            "elbow_right" to calculateAngle(
+                kp[BodyPart.RIGHT_SHOULDER]!!.coordinate,
+                kp[BodyPart.RIGHT_ELBOW]!!.coordinate,
+                kp[BodyPart.RIGHT_WRIST]!!.coordinate
+            )
+        )
+    }
+
 
     fun close() {
         tfliteInterpreter.close()

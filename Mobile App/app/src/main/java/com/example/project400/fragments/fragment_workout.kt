@@ -181,6 +181,10 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
         var mostAccuratePose = sortedResults.firstOrNull()
         val output = getString(R.string.pose_classification_text) + " $mostAccuratePose"
         poseClassifierText.text = output
+
+        // Temp code?
+        val angles = classifier.extractAngles(person.keyPoints)
+        bluetoothStatus.text = angles.toString()
     }
 
     // create pose estimator

@@ -33,31 +33,22 @@ class Camera(private val surfaceView: SurfaceView, private val fragmentWorkout: 
         /** Threshold for confidence score. */
         private const val MIN_CONFIDENCE = .2f
     }
+
     private val lock = Any()
     private var detector: PoseDetector? = null
     private var isTrackerEnabled = false
     private var yuvConverter: YuvToRgbConverter = YuvToRgbConverter(surfaceView.context)
     private lateinit var imageBitmap: Bitmap
 
-    /** Detects, characterizes, and connects to a CameraDevice (used for all camera operations) */
     private val cameraManager: CameraManager by lazy {
         val context = surfaceView.context
         context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
     }
 
-    /** Readers used as buffers for camera still shots */
     private var imageReader: ImageReader? = null
-
-    /** The [CameraDevice] that will be opened in this fragment */
     private var camera: CameraDevice? = null
-
-    /** Internal reference to the ongoing [CameraCaptureSession] configured with our parameters */
     private var session: CameraCaptureSession? = null
-
-    /** [HandlerThread] where all buffer reading operations run */
     private var imageReaderThread: HandlerThread? = null
-
-    /** [Handler] corresponding to [imageReaderThread] */
     private var imageReaderHandler: Handler? = null
     private var cameraId: String = ""
 
@@ -77,15 +68,21 @@ class Camera(private val surfaceView: SurfaceView, private val fragmentWorkout: 
                         )
                 }
                 imageBitmap = yuvConverter.yuvToRgb(image)
-                // Create rotated version for portrait display
+
+                // Rotate for display only
                 val rotateMatrix = Matrix()
                 rotateMatrix.postRotate(90.0f)
-
                 val rotatedBitmap = Bitmap.createBitmap(
                     imageBitmap, 0, 0, PREVIEW_WIDTH, PREVIEW_HEIGHT,
                     rotateMatrix, false
                 )
-                processImage(rotatedBitmap)
+
+                // Use original bitmap for model input
+                val persons = processImage(imageBitmap)
+
+                // Use rotated bitmap for displaying results
+                visualize(persons, imageBitmap)
+
                 image.close()
             }
         }, imageReaderHandler)
@@ -135,7 +132,6 @@ class Camera(private val surfaceView: SurfaceView, private val fragmentWorkout: 
         for (cameraId in cameraManager.cameraIdList) {
             val characteristics = cameraManager.getCameraCharacteristics(cameraId)
 
-            // We don't use a front facing camera in this sample.
             val cameraDirection = characteristics.get(CameraCharacteristics.LENS_FACING)
             if (cameraDirection != null &&
                 cameraDirection == CameraCharacteristics.LENS_FACING_FRONT
@@ -148,18 +144,13 @@ class Camera(private val surfaceView: SurfaceView, private val fragmentWorkout: 
 
     fun setDetector(detector: PoseDetector) {
         synchronized(lock) {
-            if (this.detector != null) {
-                this.detector?.close()
-                this.detector = null
-            }
+            this.detector?.close()
             this.detector = detector
         }
     }
 
-    // process image
-    private fun processImage(bitmap: Bitmap) {
+    private fun processImage(bitmap: Bitmap): List<Person> {
         val persons = mutableListOf<Person>()
-
         synchronized(lock) {
             detector?.estimatePoses(bitmap)?.let {
                 persons.addAll(it)
@@ -168,50 +159,66 @@ class Camera(private val surfaceView: SurfaceView, private val fragmentWorkout: 
                 }
             }
         }
-
-
-        visualize(persons, bitmap)
+        return persons
     }
 
     private fun visualize(persons: List<Person>, bitmap: Bitmap) {
-
+        // Step 1: Draw the keypoints and pose information on the original bitmap
         val outputBitmap = VisualizationUtils.drawBodyKeypoints(
             fragmentWorkout,
-            bitmap,
-            persons.filter { it.score > MIN_CONFIDENCE }, isTrackerEnabled
+            bitmap,  // Use the original bitmap (before rotation)
+            persons.filter { it.score > MIN_CONFIDENCE },
+            isTrackerEnabled
         )
 
+        // Step 2: Now apply the rotation to the output bitmap (90 degrees clockwise)
+        val rotateMatrix = Matrix().apply {
+            postRotate(90f) // Rotate 90 degrees clockwise for display
+        }
+
+        val rotatedBitmap = Bitmap.createBitmap(
+            outputBitmap, 0, 0, outputBitmap.width, outputBitmap.height, rotateMatrix, false
+        )
+
+        // Step 3: Render the rotated bitmap on the canvas
         val holder = surfaceView.holder
         val surfaceCanvas = holder.lockCanvas()
+
         surfaceCanvas?.let { canvas ->
             val screenWidth: Int
             val screenHeight: Int
             val left: Int
             val top: Int
 
+            // Calculate aspect ratio and scaling
             if (canvas.height > canvas.width) {
-                val ratio = outputBitmap.height.toFloat() / outputBitmap.width
+                val ratio = rotatedBitmap.height.toFloat() / rotatedBitmap.width
                 screenWidth = canvas.width
                 left = 0
                 screenHeight = (canvas.width * ratio).toInt()
                 top = (canvas.height - screenHeight) / 2
             } else {
-                val ratio = outputBitmap.width.toFloat() / outputBitmap.height
+                val ratio = rotatedBitmap.width.toFloat() / rotatedBitmap.height
                 screenHeight = canvas.height
                 top = 0
                 screenWidth = (canvas.height * ratio).toInt()
                 left = (canvas.width - screenWidth) / 2
             }
+
             val right: Int = left + screenWidth
             val bottom: Int = top + screenHeight
 
+            // Draw the rotated bitmap to the canvas (this is the final image with keypoints)
             canvas.drawBitmap(
-                outputBitmap, Rect(0, 0, outputBitmap.width, outputBitmap.height),
+                rotatedBitmap, Rect(0, 0, rotatedBitmap.width, rotatedBitmap.height),
                 Rect(left, top, right, bottom), null
             )
+
+            // Unlock the canvas after drawing
             surfaceView.holder.unlockCanvasAndPost(canvas)
         }
     }
+
 
     fun resume() {
         imageReaderThread = HandlerThread("imageReaderThread").apply { start() }
@@ -229,5 +236,4 @@ class Camera(private val surfaceView: SurfaceView, private val fragmentWorkout: 
         detector = null
         classifier?.close()
     }
-
 }

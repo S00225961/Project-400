@@ -1,0 +1,105 @@
+{
+    "heart_rate_very_high": "Your heart rate is quite high! Take a short break and make sure to hydrate.",
+    "heart_rate_high": "Your heart rate is a bit elevated. Slow down a little if you're feeling fatigued.",
+    "heart_rate_very_low": "Your heart rate is lower than usual. Make sure you're feeling okay and keep an eye on your energy.",
+    "heart_rate_low": "Your heart rate is on the lower side. Ensure you're pacing yourself well during your workout.",
+    
+    "spo2_critical": "Your oxygen levels are critically low. Make sure to rest and breathe deeply.",
+    "spo2_low": "Your oxygen levels are lower than normal. Focus on breathing deeply and take it easy for a bit.",
+    "spo2_optimal": "Your oxygen levels are perfect. Keep it up!",
+    
+    "temperature_high": "You're running a high temperature. Make sure to cool down and rest.",
+    "temperature_slightly_high": "Your body temperature is a little elevated. Stay hydrated and monitor how you feel.",
+    "temperature_low": "Your body temperature is on the low side. Consider warming up to get your body back to a normal range.",
+    
+    "skin_humidity_very_high": "Your skin humidity is very high. Take a moment to wipe off sweat and stay cool.",
+    "skin_humidity_high": "Your skin humidity is high. Keep wiping off sweat to stay comfortable during your workout.",
+    "skin_humidity_low": "Your skin humidity is low. Ensure you're staying hydrated during your workout.",
+    
+    "pushup_depth_insufficient": "Try to go lower in your push-ups for a better range of motion. Deepen that movement!",
+    "pushup_good_form": "Great job! Your push-up form is looking solid.",
+
+    "squat_extension_good_form": "Great squat extension! You’re standing tall with solid posture.",
+    "squat_contraction_good_form": "Excellent squat depth! Your hips and knees are aligned well.",
+    "squat_in_transition": "You're in motion — stay controlled and keep good form during both descent and rise.",
+
+    "deadlift_extension_good_form": "Strong lockout! Your hips and spine are well aligned.",
+    "deadlift_contraction_good_form": "Solid setup position! Keep that spine neutral and core engaged.",
+    "deadlift_hip_overextension": "Watch your lockout — don’t push the hips too far forward.",
+    "deadlift_in_transition": "Controlled movement is key — focus on steady pacing.",
+
+    "bench_press_extension_good_form": "Nice lockout at the top of your bench press! Elbows fully extended.",
+    "bench_press_contraction_good_form": "Great control at the contraction! Elbows bent at a safe and powerful angle.",
+    "bench_press_in_transition": "You’re moving through the press — maintain control in both directions.",
+
+    "pull_contraction_good_form": "Strong pull! Your elbows and shoulders are fully engaged at the bottom.",
+    "pull_extension_good_form": "Good form at the extension — arms extended and ready for the next rep.",
+    "pull_elbow_not_engaged": "Make sure your elbows are more engaged to activate your back muscles properly.",
+    "pull_in_transition": "You're in motion — control both the pull and the return for maximum gains.",
+
+    "shoulder_extension_good_form": "Solid shoulder extension — arms fully pressed overhead with control.",
+    "shoulder_contraction_good_form": "Nice contraction! Your arms are at a strong pressing angle.",
+    "shoulder_in_transition": "You're in motion — keep the movement controlled both ways.",
+    "shoulder_overextension": "Be careful! Your shoulders are overextended. Try to bring them back into a better range.",
+
+    "chest_fly_extension_good_form": "Nice wide stretch — your arms are extended and controlled.",
+    "chest_fly_contraction_good_form": "Strong contraction — you're hitting the peak of your chest fly with precision.",
+    "chest_fly_in_transition": "You're in between — maintain a slow, steady pace.",
+    "fly_arms_too_bent": "Try to straighten your arms a little more for a better chest fly.",
+
+    "biceps_curl_extension_good_form": "Controlled extension — arms almost straight and ready for the next rep.",
+    "biceps_curl_contraction_good_form": "Great contraction — you’re really working the biceps at this angle.",
+    "biceps_curl_in_transition": "You're in the middle of the movement — keep it slow and stable.",
+
+    "tricep_extension_good_form": "Perfect tricep extension — full lockout at the bottom!",
+    "tricep_contraction_good_form": "Nice bend — you’re activating your triceps at the right range.",
+    "tricep_in_transition": "Focus on consistent tempo through the movement.",
+
+    "hip_thrust_extension_good_form": "Great job! You're fully extending those hips. Keep it up!",
+    "hip_thrust_contraction_good_form": "Strong contraction — your glutes should be engaged now",
+    "hip_thrust_in_transition": "Smooth movement is key — drive through the heels and control the descent.",
+    "hip_thrust_incomplete_extension": "Try to raise your hips higher for a full range of motion.",
+
+    "plank_hip_dip": "Your hips are dipping too low in the plank. Keep them level to maintain core engagement.",
+    "plank_good_form": "Your plank form is excellent! Keep holding that solid core position.",
+
+    "leg_raise_knees_not_engaged": "Your knees aren't fully engaged in this leg raise. Make sure to raise your legs fully.",
+    "leg_raise_good_form": "Nice! Your leg raise form looks great.",
+
+    "leg_extension_low_range": "Your leg extension is too shallow. Extend your legs more for better activation.",
+    "leg_extension_extension_good_form": "Great job! You're fully extending those legs with perfect form.",
+    "leg_extension_contraction_good_form": "Nice contraction! Your legs are bending properly to fully engage the muscles.",
+    "leg_extension_in_transition": "You're in motion — maintain control and keep a steady pace.",
+
+    "twist_posture_slouching": "Your posture is slouching in the twist. Keep your back straight for better engagement.",
+    "russian_twist_good_form": "Well done! Your Russian twist form is looking perfect.",
+
+    "tbar_row_contraction_good_form": "Nice contraction! You're bending your arms in the right range to engage your back muscles effectively.",
+    "tbar_row_extension_good_form": "Great job! You're extending your arms properly to finish the movement with control.",
+    "tbar_row_in_transition": "You're in transition — maintain control and continue the movement smoothly.",
+
+    "tree_pose_bad_form": "Try to keep one knee bent and the sole of your foot on the upper thigh of your other leg.",
+    "tree_pose_good_form": "Great job! Your tree pose looks solid.",
+    
+    "triangle_pose_bad_form": "Be sure to spread your legs and touch your and to your foot on the left or right side while outstretching the other hand upward.",
+    "triangle_pose_good_form": "Nice work! Your triangle pose form is excellent.",
+    
+    "child_pose_bad_form": "",
+    "child_pose_good_form": "Your child pose form is great! Keep breathing deeply.",
+    
+    "cobra_pose_bad_form": "Your elbows are bent too much. Try to straighten them for a better stretch. Also be sure to keep your legs outstretched on the ground.",
+    "cobra_pose_good_form": "Great job! You're hitting that cobra pose perfectly.",
+    
+    "pigeon_pose_bad_form": "Your hip angle is too low in pigeon pose. Try to extend it more for a better stretch.",
+    "pigeon_pose_good_form": "Awesome! Your pigeon pose form is looking great.",
+    
+    "warrior_pose_bad_form": "Your knee is too straight in the warrior pose. Make sure to bend it more for proper alignment.",
+    "warrior_pose_good_form": "Great work! Your warrior pose form looks perfect.",
+    
+    "mountain_pose_bad_form": "Be sure to keep your arms and legs straight during this pose.",
+    "mountain_pose_good_form": "Nice! Your mountain pose form is looking solid.",
+    
+    "downward_dog_bad_form": "Your downward dog needs a deeper stretch. Try to extend your hips higher.",
+    "downward_dog_good_form": "Great! You're achieving a perfect stretch in downward dog."
+  }
+  

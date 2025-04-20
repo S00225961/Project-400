@@ -29,7 +29,14 @@ class ExerciseAdapter(private val exerciseList: List<Exercise>): RecyclerView.Ad
         fun bind(exercise: Exercise){
             val exType: String = exercise.type.toString()
             val exVariation: String = exercise.variation.toString()
-            val typeTextOutput = "$exType ($exVariation)"
+
+            var typeTextOutput = ""
+            if(exVariation.equals("None")){
+                typeTextOutput = "$exType"
+            } else {
+                typeTextOutput = "$exType ($exVariation)"
+            }
+
             nameTextView.text = exercise.name
             typeTextView.text = typeTextOutput
         }

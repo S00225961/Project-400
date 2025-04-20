@@ -4,5 +4,8 @@ enum class ExerciseType {
     Arms,
     Chest,
     Legs,
-    Cardio
+    Cardio,
+    Yoga,
+    Back,
+    Core
 }

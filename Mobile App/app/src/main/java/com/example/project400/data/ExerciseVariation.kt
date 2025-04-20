@@ -6,5 +6,6 @@ enum class ExerciseVariation {
     Dumbbell,
     Treadmill,
     Cable,
-    Band
+    Band,
+    None
 }

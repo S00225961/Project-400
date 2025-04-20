@@ -75,6 +75,54 @@ class ExerciseDetailFragment : Fragment() {
             "Leg Extension" -> {
                 loadGifFromAssets(requireContext(), gifImageView, "leg-extension.gif")
             }
+            "Leg Raises" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "leg-raises.gif")
+            }
+            "Pigeon Pose" -> {
+                loadImageFromAssets(requireContext(), gifImageView, "pigeon-pose.jpg")
+            }
+            "Plank" -> {
+                loadImageFromAssets(requireContext(), gifImageView, "plank.png")
+            }
+            "Pull Up" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "pull-up.gif")
+            }
+            "Push Up" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "push-up.gif")
+            }
+            "Romanian Deadlift" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "romanian-deadlift.gif")
+            }
+            "Russian Twist" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "russian-twist.gif")
+            }
+            "Shoulder Press" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "shoulder-press.gif")
+            }
+            "Squat" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "squat.gif")
+            }
+            "Standing Mountain Pose" -> {
+                loadImageFromAssets(requireContext(), gifImageView, "standing-mountain-pose.jpg")
+            }
+            "T Bar Row" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "t-bar-row.gif")
+            }
+            "Tree Pose" -> {
+                loadImageFromAssets(requireContext(), gifImageView, "tree-pose.png")
+            }
+            "Triangle Pose" -> {
+                loadImageFromAssets(requireContext(), gifImageView, "triangle-pose.jpg")
+            }
+            "Tricep Dips" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "tricep-dips.gif")
+            }
+            "Tricep Pushdown" -> {
+                loadGifFromAssets(requireContext(), gifImageView, "tricep-pushdown.gif")
+            }
+            "Warrior Pose" -> {
+                loadImageFromAssets(requireContext(), gifImageView, "warrior-pose.jpg")
+            }
         }
 
     }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import com.example.project400.adapter.ExerciseAdapter
 import com.example.project400.data.Exercise
 import com.example.project400.data.ExerciseType
 import com.example.project400.data.ExerciseVariation
+import androidx.navigation.fragment.findNavController
 
 class fragment_exercises : Fragment() {
 
@@ -69,7 +71,15 @@ class fragment_exercises : Fragment() {
             Exercise("Warrior Pose", ExerciseType.Yoga, ExerciseVariation.None)
         )
         exerciseRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        exerciseRecyclerView.adapter = ExerciseAdapter(exerciseList)
+
+        exerciseRecyclerView.adapter = ExerciseAdapter(exerciseList) { exercise ->
+            val bundle = bundleOf(
+                "exercise_name" to exercise.name,
+            )
+
+            findNavController().navigate(R.id.exerciseDetailFragment, bundle)
+        }
+
     }
 
 }

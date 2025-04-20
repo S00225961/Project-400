@@ -1,7 +1,6 @@
 package com.example.project400.fragments
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -17,7 +16,6 @@ import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -284,8 +282,16 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        handler.removeCallbacks(readDataRunnable) // Stop reading when fragment is destroyed
+        handler.removeCallbacks(readDataRunnable)
+        handler.removeCallbacks(feedbackRunnable)
         bluetooth.disconnect()
+        if (::tts.isInitialized) {
+            tts.stop()
+            tts.shutdown()
+        }
+        camera?.close()
+        camera = null
+        personObject = null
     }
 
     override fun onSensorDataUpdated(temp: String, hr: String, spo2: String, humidity: String) {

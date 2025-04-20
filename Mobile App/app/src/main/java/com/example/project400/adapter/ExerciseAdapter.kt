@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.project400.R
 import com.example.project400.data.Exercise
 
-class ExerciseAdapter(private val exerciseList: List<Exercise>): RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
+class ExerciseAdapter(private val exerciseList: List<Exercise>, private val onItemClick: (Exercise) -> Unit): RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.exercise_item, parent, false)
@@ -39,6 +39,10 @@ class ExerciseAdapter(private val exerciseList: List<Exercise>): RecyclerView.Ad
 
             nameTextView.text = exercise.name
             typeTextView.text = typeTextOutput
+
+            itemView.setOnClickListener {
+                onItemClick(exercise)
+            }
         }
     }
 }

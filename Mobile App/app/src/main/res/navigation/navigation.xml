@@ -29,4 +29,15 @@
         android:label="Exercises"
         tools:layout="@layout/fragment_exercises" />
 
+    <fragment
+            android:id="@+id/exerciseDetailFragment"
+            android:name="com.example.project400.fragments.ExerciseDetailFragment"
+            android:label="Exercise Detail"
+            tools:layout="@layout/fragment_exercise_detail">
+
+            <argument
+                android:name="exercise_name"
+                app:argType="string" />
+    </fragment>
+
 </navigation>

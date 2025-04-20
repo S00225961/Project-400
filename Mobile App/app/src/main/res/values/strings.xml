@@ -2,6 +2,5 @@
     <string name="app_name">NeuroPi Fitness</string>
     <string name="camera_request_permission">This app needs camera permission.</string>
     <string name="pose_classification_text">Exercise being performed: </string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="terms_and_conditions">This application is intended solely for individuals with prior experience in fitness and physical training. By using this app, you acknowledge that you have a foundational understanding of exercise techniques, safety practices, and your own physical limitations.\n\n The workouts, data tracking, and features provided are not tailored for beginners and may involve advanced routines or terminology. Users are responsible for ensuring they are physically capable of performing any exercises suggested within the app. If you are unsure about your fitness level or experience, we recommend consulting a certified trainer or healthcare professional before proceeding. Use of this app is at your own risk.</string>
 </resources>

@@ -24,38 +24,46 @@ class Feedback(context: Context) {
         val tags = mutableListOf<String>()
 
         // Health metrics
-        if (hr > 160) {
-            tags.add("heart_rate_very_high")
-        } else if (hr > 135) {
-            tags.add("heart_rate_high")
-        } else if (hr < 65) {
-            tags.add("heart_rate_very_low")
-        } else if (hr < 85) {
-            tags.add("heart_rate_low")
+        if(hr != -1f){
+            if (hr > 160) {
+                tags.add("heart_rate_very_high")
+            } else if (hr > 135) {
+                tags.add("heart_rate_high")
+            } else if (hr < 65) {
+                tags.add("heart_rate_very_low")
+            } else if (hr < 85) {
+                tags.add("heart_rate_low")
+            }
         }
 
-        if (spo2 < 93) {
-            tags.add("spo2_critical")
-        } else if (spo2 < 94) {
-            tags.add("spo2_low")
-        } else if (spo2 in 98.0..100.0) {
-            tags.add("spo2_optimal")
+        if(spo2 != -1f){
+            if (spo2 < 93) {
+                tags.add("spo2_critical")
+            } else if (spo2 < 94) {
+                tags.add("spo2_low")
+            } else if (spo2 in 98.0..100.0) {
+                tags.add("spo2_optimal")
+            }
         }
 
-        if (temp > 38.5) {
-            tags.add("temperature_high")
-        } else if (temp > 37.8) {
-            tags.add("temperature_slightly_high")
-        } else if (temp <= 34) {
-            tags.add("temperature_low")
+        if(temp != -1f){
+            if (temp > 38.5) {
+                tags.add("temperature_high")
+            } else if (temp > 37.8) {
+                tags.add("temperature_slightly_high")
+            } else if (temp <= 34) {
+                tags.add("temperature_low")
+            }
         }
 
-        if (humidity > 75) {
-            tags.add("skin_humidity_very_high")
-        } else if (humidity > 65) {
-            tags.add("skin_humidity_high")
-        } else if (humidity < 40) {
-            tags.add("skin_humidity_low")
+        if(humidity != -1f){
+            if (humidity > 75) {
+                tags.add("skin_humidity_very_high")
+            } else if (humidity > 65) {
+                tags.add("skin_humidity_high")
+            } else if (humidity < 40) {
+                tags.add("skin_humidity_low")
+            }
         }
 
         // Pose angles

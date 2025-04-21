@@ -44,10 +44,10 @@ lateinit var feedback: Feedback
 private var device = Device.CPU
 private var camera: Camera? = null
 // Health data
-private var Temperature = Random.nextFloat() * 50
-private var Spo2 = Random.nextFloat() * 100
-private var Heartrate = Random.nextFloat() * 200
-private var Humidity = Random.nextFloat() * 100
+private var Temperature = -1f
+private var Spo2 = -1f
+private var Heartrate = -1f
+private var Humidity = -1f
 //TTS
 private lateinit var tts: TextToSpeech
 private var isTtsInitialized = false
@@ -295,11 +295,27 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
     }
 
     override fun onSensorDataUpdated(temp: String, hr: String, spo2: String, humidity: String) {
-        Temperature = temp.toFloat()
-        Heartrate = hr.toFloat()
-        Spo2 = spo2.toFloat()
-        Humidity = humidity.toFloat()
-        piData.text = "Body Temp: $temp°C, Heart Rate: $hr bpm, SpO2: $spo2%, Humidity: $humidity%"
+        try {
+            val tempValue = temp.substringBefore(" ").toFloatOrNull() ?: -1f
+            val hrValue = hr.substringBefore(" ").toFloatOrNull() ?: -1f
+            val spo2Value = spo2.substringBefore(" ").toFloatOrNull() ?: -1f
+            val humidityValue = humidity.substringBefore(" ").toFloatOrNull() ?: -1f
+
+            Temperature = tempValue
+            Heartrate = hrValue
+            Spo2 = spo2Value
+            Humidity = humidityValue
+
+            Log.d("Health", "Temp: $Temperature")
+            Log.d("Health", "Heartrate: $Heartrate")
+            Log.d("Health", "Spo2: $Spo2")
+            Log.d("Health", "Humidity: $Humidity")
+
+            piData.text = "Body Temp: $temp, Heart Rate: $hr, SpO2: $spo2, Humidity: $humidity"
+        } catch (e: Exception) {
+            Log.e("SensorData", "Failed to parse sensor data: ${e.message}")
+        }
     }
+
 
 }

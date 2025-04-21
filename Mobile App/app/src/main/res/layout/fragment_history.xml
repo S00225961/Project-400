@@ -6,9 +6,23 @@
     android:background="@color/background"
     tools:context=".fragments.fragment_history">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/workoutRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <Button
+                android:text="Add a New Workout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/gray"
+                android:textColor="@color/white"
+                android:id="@+id/addWorkoutBtn" />
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/workoutRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -208,6 +208,7 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
 
         if (isCameraPermissionGranted()) {
             if (camera == null) {
+                classifier = context?.let { PoseClassifier(it) }!!
                 camera = Camera(surfaceView, this).apply { prepareCamera() }
                 lifecycleScope.launch(Dispatchers.Main) {
                     camera?.initCamera()

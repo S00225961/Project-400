@@ -88,13 +88,14 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val bluetoothGranted = permissions[Manifest.permission.BLUETOOTH_CONNECT] ?: true
-            val cameraGranted = permissions[Manifest.permission.CAMERA] ?: true
+            val bluetoothConnectGranted = permissions[Manifest.permission.BLUETOOTH_CONNECT] ?: false
+            val bluetoothScanGranted = permissions[Manifest.permission.BLUETOOTH_SCAN] ?: false
+            val cameraGranted = permissions[Manifest.permission.CAMERA] ?: false
 
-            if (bluetoothGranted) {
+            if (bluetoothConnectGranted && bluetoothScanGranted) {
                 initBluetooth()
             } else {
-                Log.e("Permissions", "Bluetooth permission denied")
+                Log.e("Permissions", "Bluetooth connect or scan permission denied")
             }
 
             if (cameraGranted) {
@@ -124,10 +125,15 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
         //Permissions
         val permissionList = mutableListOf<String>()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT)
-            != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.BLUETOOTH_CONNECT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT)
+                != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(Manifest.permission.BLUETOOTH_CONNECT)
+            }
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_SCAN)
+                != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(Manifest.permission.BLUETOOTH_SCAN)
+            }
         }
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)

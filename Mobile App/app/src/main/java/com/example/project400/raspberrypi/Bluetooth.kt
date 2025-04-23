@@ -29,12 +29,13 @@ class Bluetooth(private val context: Context, private val listener: SensorDataLi
 
     private val gattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+            Log.d("Bluetooth", "onConnectionStateChange status=$status newState=$newState")
             if (newState == BluetoothGatt.STATE_CONNECTED) {
                 Log.d("Bluetooth", "Connected to device, discovering services...")
                 handler.postDelayed({
                     if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) return@postDelayed
                     gatt.discoverServices()
-                }, 1500)
+                }, 5000)
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
                 Log.e("Bluetooth", "Disconnected from device.")
                 bluetoothGatt = null
@@ -151,6 +152,7 @@ class Bluetooth(private val context: Context, private val listener: SensorDataLi
 
     fun disconnect() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) return
+        bluetoothGatt?.disconnect()
         bluetoothGatt?.close()
         bluetoothGatt = null
     }

@@ -31,7 +31,10 @@ class WorkoutForm : AppCompatActivity() {
 
         //change navbar color
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.navbar))
-
+        val backButton = findViewById<Button>(R.id.backButton)
+        backButton.setOnClickListener {
+            finish()
+        }
         var enterWorkoutName = findViewById<EditText>(R.id.enterWorkoutName)
         var enterDate = findViewById<EditText>(R.id.enterDate)
         var workoutTimeHours = findViewById<EditText>(R.id.workoutTimeHours)

@@ -1,23 +1,15 @@
 package com.example.project400
 
-import android.content.ContentValues
-import android.content.Context
+
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.example.project400.data.DatabaseHelper
+import com.example.project400.fragments.fragment_profile
 
 class UserForm : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +19,11 @@ class UserForm : AppCompatActivity() {
         //change navbar color
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.navbar))
 
+        val backButton = findViewById<Button>(R.id.backButton)
+        backButton.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
         val submitButton = findViewById<Button>(R.id.submitButton)
         val usernameEditText = findViewById<EditText>(R.id.enterUsername)
         val heightEditText = findViewById<EditText>(R.id.enterHeight)

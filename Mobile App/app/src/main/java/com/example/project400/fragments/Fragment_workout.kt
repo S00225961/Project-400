@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -85,20 +86,20 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
         private const val FRAGMENT_DIALOG = "dialog"
     }
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                // Permission is granted. Continue the action or workflow in your
-                // app.
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val bluetoothGranted = permissions[Manifest.permission.BLUETOOTH_CONNECT] ?: true
+            val cameraGranted = permissions[Manifest.permission.CAMERA] ?: true
+
+            if (bluetoothGranted) {
+                initBluetooth()
+            } else {
+                Log.e("Permissions", "Bluetooth permission denied")
+            }
+
+            if (cameraGranted) {
                 openCamera()
             } else {
-                // Explain to the user that the feature is unavailable because the
-                // features requires a permission that the user has denied. At the
-                // same time, respect the user's decision. Don't link to system
-                // settings in an effort to convince the user to change their
-                // decision.
                 ErrorDialog.newInstance(getString(R.string.camera_request_permission))
                     .show(requireActivity().supportFragmentManager, FRAGMENT_DIALOG)
             }
@@ -120,9 +121,27 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
         piData = view.findViewById(R.id.raspberryPiData)
         modelFeedback = view.findViewById(R.id.modelFeedback)
 
-        bluetooth = Bluetooth(requireContext(), this)
-        bluetooth.connectToPairedDevice()
-        handler.postDelayed(readDataRunnable, 4000)
+        //Permissions
+        val permissionList = mutableListOf<String>()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT)
+            != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.BLUETOOTH_CONNECT)
+        }
+
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.CAMERA)
+        }
+
+        if (permissionList.isNotEmpty()) {
+            permissionLauncher.launch(permissionList.toTypedArray())
+        } else {
+            initBluetooth()
+            openCamera()
+        }
+
         // Instantiate the feedback model
         feedback = context?.let { Feedback(it) }!!
         // Instantiate the classifier
@@ -151,14 +170,12 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
         }
         handler.postDelayed(feedbackRunnable, Random.nextLong((0.1 * 60 * 1000).toLong(), (0.5 * 60 * 1000).toLong()))
 
-        //Permissions
-        if (!isCameraPermissionGranted()) {
-            requestPermission()
-        }
-        else {
-            openCamera()
-        }
+    }
 
+    private fun initBluetooth() {
+        bluetooth = Bluetooth(requireContext(), this)
+        bluetooth.connectToPairedDevice()
+        handler.postDelayed(readDataRunnable, 4000)
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -188,18 +205,6 @@ class fragment_workout : Fragment(), Bluetooth.SensorDataListener  {
     // check if permission is granted or not.
     private fun isCameraPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-    }
-
-    // request camera permission
-    private fun requestPermission() {
-        // Check if the camera permission is granted
-        if (!isAdded) return
-
-        if (isCameraPermissionGranted()) {
-            openCamera()
-        } else {
-            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-        }
     }
 
     // open camera

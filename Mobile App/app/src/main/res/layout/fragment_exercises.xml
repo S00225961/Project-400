@@ -6,10 +6,16 @@
     android:background="@color/background"
     tools:context=".fragments.fragment_exercises">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/exerciseRecyclerView"
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="641dp" />
+            android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/exerciseRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="641dp" />
+
+    </LinearLayout>
 
 </FrameLayout>
